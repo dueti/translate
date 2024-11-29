@@ -22,10 +22,10 @@ document.getElementById('translateBtn').addEventListener('click', async () => {
     }
 });
 
-// 使用百度翻译dAPI
+// 使用百度翻译API，划线处放入你的API及密钥；注册地址：https://fanyi-api.baidu.com/manage/developer
 async function fetchTranslation(word) {
-    const appId = '此处替换为你的百度翻译ID';
-    const key = '此处替换为你的百度翻译密钥';
+    const appId = '——————————';
+    const key = '————————';
     const salt = Date.now();
     const sign = md5(appId + word + salt + key);
     
@@ -125,3 +125,45 @@ function addToHistory(english, chinese) {
     // 插入到表格顶部
     tbody.insertBefore(tr, tbody.firstChild);
 }
+
+// 添加发音功能
+function speakWord(word) { // 定义发音函数
+    const utterance = new SpeechSynthesisUtterance(word); // 创建发音对象
+    utterance.lang = 'en-US'; // 设置语言为英语
+    window.speechSynthesis.speak(utterance); // 播放发音
+}
+
+// 修改翻译历史的添加逻辑
+function addTranslationToHistory(englishWord, chineseTranslation, grammar) { // 添加语法参数
+    const historyTable = document.getElementById('translationHistory').getElementsByTagName('tbody')[0]; // 获取历史表格
+    const newRow = historyTable.insertRow(); // 插入新行
+
+    const englishCell = newRow.insertCell(0); // 插入英文单元格
+    englishCell.textContent = englishWord; // 设置英文内容
+    englishCell.onclick = () => speakWord(englishWord); // 点击发音
+
+    const chineseCell = newRow.insertCell(1); // 插入中文单元格
+    chineseCell.textContent = chineseTranslation; // 设置中文内容
+
+    const grammarCell = newRow.insertCell(2); // 插入语法单元格
+    grammarCell.textContent = grammar; // 设置语法内容
+    grammarCell.style.width = '80px'; // 设置宽度
+
+    const deleteCell = newRow.insertCell(3); // 插入操作单元格
+    deleteCell.innerHTML = '<button class="delete-btn">删除</button>'; // 添加删除按钮
+    deleteCell.querySelector('.delete-btn').onclick = () => newRow.remove(); // 删除行
+}
+
+document.getElementById('translateBtn').onclick = function() { // 点击翻译按钮
+    const wordInput = document.getElementById('wordInput').value; // 获取输入的单词
+    const translatedWord = translate(wordInput); // 假设有一个翻译函数
+    const grammar = getGrammar(wordInput); // 假设有一个获取语法的函数
+
+    addTranslationToHistory(wordInput, translatedWord, grammar); // 添加到翻译历史
+    speakWord(wordInput); // 调用发音函数
+};
+
+document.getElementById('speakBtn').onclick = function() { // 点击发音按钮
+    const wordInput = document.getElementById('wordInput').value; // 获取输入的单词
+    speakWord(wordInput); // 调用发音函数
+};
