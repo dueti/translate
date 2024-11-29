@@ -13,7 +13,10 @@
         <h1>翻译工具</h1>
         <div class="translator-container">
             <div class="input-section centered-content" data-label="英文">
-            <textarea id="wordInput" class="centered-text" placeholder="请输入单词" rows="5"></textarea>
+                <div class="input-wrapper">
+                    <textarea id="wordInput" class="centered-text" placeholder="请输入单词" rows="5"></textarea>
+                    <button id="speakBtn" class="secondary-btn">发音</button>
+                </div>
             </div>
             <div class="output-section centered-content" data-label="中文">
                 <div id="translationOutput" class="translation-result centered-text default-text">等待翻译...</div>
